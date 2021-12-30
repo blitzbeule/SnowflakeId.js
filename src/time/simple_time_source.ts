@@ -18,6 +18,6 @@ export class SimpleTimeSource implements TimeSource {
 
   // 1577836800000 is Wednesday, 1. January 2020 00:00:00 GMT
   public static createDefault(): SimpleTimeSource {
-    return new SimpleTimeSource(BigInt(1577836800000));
+    return new SimpleTimeSource(1577836800000n);
   }
 }

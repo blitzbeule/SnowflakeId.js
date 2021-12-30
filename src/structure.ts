@@ -42,15 +42,15 @@ export class Structure {
   }
 
   public get maxSequences(): bigint {
-    return BigInt(1) << BigInt(this._sequenceBits);
+    return 1n << BigInt(this._sequenceBits);
   }
 
   public get maxGenerators(): bigint {
-    return BigInt(1) << BigInt(this._generatorBits);
+    return 1n << BigInt(this._generatorBits);
   }
 
   public get maxTimestamps(): bigint {
-    return BigInt(1) << BigInt(this._timestampBits);
+    return 1n << BigInt(this._timestampBits);
   }
 
   public wraparoundTime(timeSource: TimeSource): bigint {

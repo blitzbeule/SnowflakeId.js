@@ -1,10 +1,12 @@
 import { SimpleTimeSource } from ".";
 import { Structure } from "./structure";
 import { TimeSource } from "./time/time_source";
+import { sleep } from "./util";
 
 export class SnowflakeGenerator {
-  private generatorId: bigint;
-  private structure: Structure;
+  private _generatorId: bigint;
+
+  private _structure: Structure;
   private timeSource: TimeSource;
 
   private maxSequence: bigint;
@@ -12,8 +14,8 @@ export class SnowflakeGenerator {
   private timeShift: bigint;
   private generatorComponent: bigint;
 
-  private lastTimestamp: bigint = BigInt(-1);
-  private sequence: bigint = BigInt(0);
+  private lastTimestamp: bigint = -1n;
+  private sequence: bigint = 0n;
 
   constructor(generatorId: bigint);
   constructor(
@@ -33,12 +35,12 @@ export class SnowflakeGenerator {
       timeSource = SimpleTimeSource.createDefault();
     }
 
-    if (generatorId < 0 || generatorId > structure.maxGenerators - BigInt(1)) {
+    if (generatorId < 0 || generatorId > structure.maxGenerators - 1n) {
       throw new Error("generatorId not in bounds");
     }
-    this.generatorId = generatorId;
+    this._generatorId = generatorId;
 
-    this.structure = structure;
+    this._structure = structure;
     this.timeSource = timeSource;
 
     this.timeMask = this.calculateMask(BigInt(structure.timestampBits));
@@ -60,12 +62,12 @@ export class SnowflakeGenerator {
 
     if (timestamp == this.lastTimestamp) {
       if (this.sequence >= this.maxSequence) {
-        await this.sleep(1);
+        await sleep(1);
         return this.next();
       }
       this.sequence++;
     } else {
-      this.sequence = BigInt(0);
+      this.sequence = 0n;
       this.lastTimestamp = timestamp;
     }
 
@@ -77,11 +79,15 @@ export class SnowflakeGenerator {
     );
   }
 
-  private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   private calculateMask(bits: bigint): bigint {
     return (BigInt(1) << bits) - BigInt(1);
+  }
+
+  public get structure(): Structure {
+    return this._structure;
+  }
+
+  public get generatorId(): bigint {
+    return this._generatorId;
   }
 }
