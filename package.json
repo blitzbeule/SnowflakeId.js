@@ -1,8 +1,12 @@
 {
-  "name": "snowflakeid",
+  "name": "@blitzbeule/snowflakeid",
   "version": "1.0.0",
   "description": "generate Snowflake Ids like twitter or discord",
-  "main": "build/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest -c ./jest.unit.json",
